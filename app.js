@@ -4,11 +4,38 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var oracledb = require('oracledb');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+var dbRes;
+
+oracledb.getConnection(
+  {
+    user          : "desgemini",
+    password      : "z7575380",
+    connectString : "10.211.55.12/xe"
+  },
+  function(err, connection)
+  {
+    if (err) {
+      console.error(err.message);
+      return;
+    }
+    connection.execute(
+      "SELECT * FROM DEVICE",
+      function(err, result)
+      {
+        if (err) {
+          console.error(err.message);
+          return;
+        }
+        dbRes = result.rows;
+    });
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +51,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+app.use('/db', function (req, res) {
+  res.send(dbRes);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
