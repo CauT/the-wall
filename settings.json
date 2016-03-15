@@ -1,0 +1,7 @@
+{
+  "oracledbConnSettings": {
+      "user"          : "desgemini",
+      "password"      : "z7575380",
+      "connectString" : "10.211.55.12/xe"
+  }
+}

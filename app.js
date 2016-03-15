@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var oracledb = require('oracledb');
 
 var routes = require('./routes/index');
+var v1 = require('./routes/v1');
 var users = require('./routes/users');
 
 var app = express();
@@ -49,7 +50,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/v1', v1);
 app.use('/users', users);
 
 app.use('/db', function (req, res) {
