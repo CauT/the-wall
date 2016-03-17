@@ -2,26 +2,49 @@ var express = require('express');
 var router = express.Router();
 var oracledb = require('oracledb');
 
-// var {
-//   oracledb_conn_settings: conn_settings
-// } = require("../settings.json");
 var connSettings = require("../settings.json").oracledbConnSettings;
 
-var getKindOfDeviceList = "SELECT DISTINCT DEVICENAME FROM DEVICE ORDER BY DEVICENAME";
+var getListofDeviceType =
+  "select distinct devicename from device order by devicename";
+var getListofStationId =
+  "select name from station order by name";
 
+// path:/v1/device/info/kind_list
 router.get('/info/kind_list', function(req, res, next) {
   oracledb.getConnection(
     connSettings,
-    function(err, connection)
-    {
+    function(err, connection) {
       if (err) {
         console.error(err.message);
+        res.send(err.message);
         return;
       }
       connection.execute(
-        getKindOfDeviceList,
-        function(err, result)
-        {
+        getListofDeviceType,
+        function(err, result) {
+          if (err) {
+            console.error(err.message);
+            res.send(err.message);
+            return;
+          }
+          res.send(result.rows);
+      });
+  });
+});
+
+// path:/v1/device/info/station_list
+router.get('/info/station_list', function(req, res, next) {
+  oracledb.getConnection(
+    connSettings,
+    function(err, connection) {
+      if (err) {
+        console.error((err.message));
+        res.send(err.message);
+        return;
+      }
+      connection.execute(
+        getListofStationId,
+        function(err, result) {
           if (err) {
             console.error(err.message);
             res.send(err.message);

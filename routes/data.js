@@ -1,7 +1,7 @@
 var express = require('express');
-var agriEnv = require('agri-env');
+var agriEnv = require('./agriEnv');
 var router = express.Router();
 
-router.use('/agri-env', agriEnv);
+router.use('/agri_env', agriEnv);
 
 module.exports = router;
