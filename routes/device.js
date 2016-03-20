@@ -9,8 +9,8 @@ var getListofDeviceType =
 var getListofStationId =
   "select name from station order by name";
 
-// path:/v1/device/info/kind_list
-router.get('/info/kind_list', function(req, res, next) {
+// path:/v1/device/info/type_list
+router.get('/info/type_list', function(req, res, next) {
   oracledb.getConnection(
     connSettings,
     function(err, connection) {
