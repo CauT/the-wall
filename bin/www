@@ -7,6 +7,26 @@
 var app = require('../app');
 var debug = require('debug')('the-wall:server');
 var http = require('http');
+var dbconfig = require('../database/dbconfig.js');
+var database = require('../database/database.js');
+
+process.on('uncaughtException', function(err) {
+    console.error('Uncaught exception ', err);
+
+    shutdown();
+});
+
+process.on('SIGTERM', function () {
+    console.log('Received SIGTERM');
+
+    shutdown();
+});
+
+process.on('SIGINT', function () {
+    console.log('Received SIGINT');
+
+    shutdown();
+});
 
 /**
  * Get port from environment and store in Express.
@@ -25,9 +45,19 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+(function initServer() {
+  database.createPool(dbconfig)
+    .then(function() {
+      server.listen(port);
+      server.on('error', onError);
+      server.on('listening', onListening);
+    })
+    .catch(function(err) {
+        console.error('Error occurred creating database connection pool', err);
+        console.log('Exiting process');
+        process.exit(0);
+  });
+})();
 
 /**
  * Normalize a port into a number, string, or false.
@@ -87,4 +117,29 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+function shutdown() {
+    console.log('Shutting down');
+    console.log('Closing web server');
+
+    server.close(function () {
+        console.log('Web server closed');
+
+        database.terminatePool()
+            .then(function() {
+                console.log('node-oracledb connection pool terminated');
+                console.log('Exiting process');
+                process.exit(0);
+            })
+            .catch(function(err) {
+                console.error('Error occurred while terminating node-oracledb connection pool', err);
+                console.log('Exiting process');
+                process.exit(0);
+            });
+    });
+
+    // for (key in openHttpConnections) {
+    //     openHttpConnections[key].destroy();
+    // }
 }
