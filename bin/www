@@ -124,22 +124,18 @@ function shutdown() {
     console.log('Closing web server');
 
     server.close(function () {
-        console.log('Web server closed');
+      console.log('Web server closed');
 
-        database.terminatePool()
-            .then(function() {
-                console.log('node-oracledb connection pool terminated');
-                console.log('Exiting process');
-                process.exit(0);
-            })
-            .catch(function(err) {
-                console.error('Error occurred while terminating node-oracledb connection pool', err);
-                console.log('Exiting process');
-                process.exit(0);
-            });
+      database.terminatePool()
+        .then(function() {
+            console.log('node-oracledb connection pool terminated');
+            console.log('Exiting process');
+            process.exit(0);
+        })
+        .catch(function(err) {
+            console.error('Error occurred while terminating node-oracledb connection pool', err);
+            console.log('Exiting process');
+            process.exit(0);
+        });
     });
-
-    // for (key in openHttpConnections) {
-    //     openHttpConnections[key].destroy();
-    // }
 }
