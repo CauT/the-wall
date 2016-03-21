@@ -37,19 +37,23 @@ function getJsonAndTest(done, path, equal) {
 describe('/v1', function() {
   describe('/device', function() {
     describe('/info', function() {
+      // to test path:/v1/device/info/type_list
       describe('/type_list', function() {
         it('should return json as expected:', function(done) {
-          getJsonAndTest(done, '/v1/device/info/type_list', supposedJson.device.type_list);
+          getJsonAndTest(done, '/v1/device/info/type_list',
+            supposedJson.device.type_list);
         });
       });
+      // to test path:/v1/device/info/station_list
       describe('/station_list', function() {
         it('should return json as expected:', function(done) {
-          getJsonAndTest(done, '/v1/device/info/station_list', supposedJson.device.station_list);
+          getJsonAndTest(done, '/v1/device/info/station_list',
+            supposedJson.device.station_list);
         });
       });
     });
   });
-  // path:/v1/data/agri_env/current?deviceType={}&stationName={}
+  // to test path:/v1/data/agri_env/current?deviceType={}&stationName={}
   describe('/data', function() {
     describe('/agri_env', function() {
       it('query with specified deviceType:', function(done) {
@@ -61,8 +65,10 @@ describe('/v1', function() {
           supposedJson.agri_env.current_with_stationName_A1);
       });
       it('query with specified deviceType and stationName:', function(done) {
-        getJsonAndTest(done, '/v1/data/agri_env/current?deviceType=Light&stationName=A1',
-          supposedJson.agri_env.current_with_deviceName_Light_and_stationName_A1);
+        getJsonAndTest(done,
+          '/v1/data/agri_env/current?deviceType=Light&stationName=A1',
+          supposedJson.agri_env.current_with_deviceName_Light_and_stationName_A1
+        );
       });
     });
   });
