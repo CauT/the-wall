@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var oracledb = require('oracledb');
-
-var connSettings = require("../settings.json").oracledbConnSettings;
+var database = require('../database/database.js');
 
 var getCurrentValueOfSelectedDevices = function(deviceType, stationName) {
   var sql = "select devicecode,devicename,value,unit from device";
@@ -38,25 +36,19 @@ var getCurrentValueOfSelectedDevices = function(deviceType, stationName) {
 
 // path:/v1/data/agri_env/current?deviceType={}&stationName={}
 router.get('/current', function(req, res, next) {
-  oracledb.getConnection(
-    connSettings,
-    function(err, connection) {
-      if (err) {
-        console.error((err.message));
-        res.send(err.message);
-        return;
-      }
-      connection.execute(
-        getCurrentValueOfSelectedDevices(req.query.deviceType, req.query.stationName),
-        function(err, result) {
-          if (err) {
-            console.error(err.message);
-            res.send(err.message);
-            return;
-          }
-          res.send(result.rows);
-      });
-  });
+  database.simpleExecute(
+    getCurrentValueOfSelectedDevices(req.query.deviceType, req.query.stationName),
+    {}, //no binds
+    {
+      outFormat: database.ARRAY
+    }
+  )
+    .then(function(results) {
+      res.send(results.rows);
+    })
+    .catch(function(err) {
+      next(err);
+    });
 });
 
 module.exports = router;
