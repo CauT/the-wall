@@ -13,7 +13,7 @@ router.get('/info/type_list', function(req, res, next) {
       getListofDeviceType,
       {}, //no binds
       {
-        outFormat: database.ARRAY
+        outFormat: database.OBJECT
       }
     )
       .then(function(results) {
@@ -30,7 +30,7 @@ router.get('/info/station_list', function(req, res, next) {
       getListofStationId,
       {}, //no binds
       {
-        outFormat: database.ARRAY
+        outFormat: database.OBJECT
       }
     )
       .then(function(results) {

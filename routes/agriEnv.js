@@ -40,7 +40,7 @@ router.get('/current', function(req, res, next) {
     getCurrentValueOfSelectedDevices(req.query.deviceType, req.query.stationName),
     {}, //no binds
     {
-      outFormat: database.ARRAY
+      outFormat: database.OBJECT
     }
   )
     .then(function(results) {
