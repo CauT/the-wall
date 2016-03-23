@@ -1,7 +1,7 @@
 var express = require('express');
-var generateGraph = require('./generate_graph');
+var generateGraph = require('./generateGraph');
 var router = express.Router();
 
-router.use('/generate_graph', generateGraph);
+router.use('/generateGraph', generateGraph);
 
 module.exports = router;
