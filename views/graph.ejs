@@ -5,10 +5,20 @@
     <title>ECharts</title>
     <!-- 引入 echarts.js -->
     <script src="/javascripts/echarts.common.min.js"></script>
+    <style>
+      .fill{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+    </style>
 </head>
 <body>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="width: 600px;height:400px;"></div>
+    <div id="main" style="width: 900px;height:600px;"></div>
     <script type="text/javascript">
       // 基于准备好的dom，初始化echarts实例
       var myChart = echarts.init(document.getElementById('main'));
@@ -31,7 +41,6 @@
         },
         toolbox: {
           feature: {
-              saveAsImage: {}
           }
         },
         xAxis: {
@@ -56,6 +65,9 @@
         option.series[0].data.push(<%= y %>);
       <% }); %>
       myChart.setOption(option);
+      if (<%= isAndroid %>) {
+        self.location.href = myChart.getDataURL();
+      }
     </script>
 </body>
 </html>
