@@ -18,21 +18,24 @@ function getLocalTime(nS) {
 // TODO: prevent SQL injection
 router.get('/', function(req, res, next) {
   database.simpleExecute(
-    "SELECT DEVICE.DEVICEID,\
+    "SELECT\
+      DEVICE.DEVICEID,\
       DEVICECODE,\
       DEVICENAME,\
       UNIT,\
       ANALOGYVALUE,\
       DEVICEHISTROY.RECTIME\
-    FROM DEVICE INNER JOIN DEVICEHISTROY\
-      ON DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
-    WHERE DEVICE.DEVICEID="
-    + req.query.device_id
-    + " AND DEVICEHISTROY.RECTIME\
-      BETWEEN "
-    + req.query.start_time + " AND " + req.query.end_time
-    + " ORDER BY RECTIME",
-    {}, //no binds
+    FROM\
+      DEVICE INNER JOIN DEVICEHISTROY\
+    ON\
+      DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
+    WHERE\
+      DEVICE.DEVICEID = :device_id\
+      AND DEVICEHISTROY.RECTIME\
+      BETWEEN :start_time AND :end_time\
+    ORDER\
+      BY RECTIME",
+    [req.query.device_id, req.query.start_time, req.query.end_time],
     {
       outFormat: database.OBJECT
     }
