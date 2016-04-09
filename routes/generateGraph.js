@@ -2,35 +2,21 @@ var express = require('express');
 var router = express.Router();
 var database = require('../database/database');
 
+var lastDate = '';
+
 function getLocalTime(nS) {
-   return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+  var now = new Date(parseInt(nS) * 1000).toLocaleString();
+  if (lastDate.substring(0, 10) == now.substring(0, 10)) {
+    lastDate = now;
+    return now.substring(11);
+  } else {
+    lastDate = now;
+    return now;
+  }
 }
 
-// path:/v1/utils/generateGraph?startTime={}&endTime={}&deviceId={}
-// localhost:3000/v1/utils/generateGraph?startTime=1443650000&endTime=1443655000&deviceId=172
-// var sql = "SELECT * FROM DEVICEHISTROY\
-//   WHERE DEVICEID=172\
-//   AND RECTIME BETWEEN 1443650000 AND 1443655000\
-//   ORDER BY RECTIME";
-var sql = "SELECT DEVICE.DEVICEID,\
-	DEVICECODE,\
-	DEVICENAME,\
-	UNIT,\
-	ANALOGYVALUE,\
-	DEVICEHISTROY.RECTIME\
-  FROM DEVICE INNER JOIN DEVICEHISTROY\
-  ON DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
-  WHERE DEVICE.DEVICEID=172 AND DEVICEHISTROY.RECTIME\
-  BETWEEN 1443650000 AND 1443655000\
-  ORDER BY RECTIME";
 router.get('/', function(req, res, next) {
   database.simpleExecute(
-    // "SELECT * FROM DEVICEHISTROY WHERE DEVICEID="
-    //   + req.query.deviceId
-    //   + " AND RECTIME BETWEEN "
-    //   + req.query.startTime
-    //   + " AND "
-    //   + req.query.endTime,
     "SELECT DEVICE.DEVICEID,\
       DEVICECODE,\
       DEVICENAME,\
@@ -53,6 +39,7 @@ router.get('/', function(req, res, next) {
   .then(function(results) {
     var x = [];
     var y = [];
+    lastDate = '';
     results.rows.forEach(function(row) {
       x.push(getLocalTime(row.RECTIME));
       y.push(row.ANALOGYVALUE);
@@ -63,11 +50,17 @@ router.get('/', function(req, res, next) {
       dataX: x,
       dataY: y,
       isAndroid: req.query.platform === 'Android',
+      height: req.query.height == undefined ? 200 : req.query.height,
+      width: req.query.width == undefined ? 300 : req.query.width,
     });
   })
   .catch(function(err) {
     next(err);
   });
+});
+
+router.get('/fuckAndroid', function(req, res, next) {
+
 });
 
 module.exports = router;
