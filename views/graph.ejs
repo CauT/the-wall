@@ -21,13 +21,9 @@
     </style>
 </head>
 <body>
-    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
     <div id="chart" class="chart"></div>
-    <Text id="text"></Text>
     <script type="text/javascript">
-      // 基于准备好的dom，初始化echarts实例
       var myChart = echarts.init(document.getElementById('chart'));
-      // 使用刚指定的配置项和数据显示图表
       var option = {
         title: {
           text: '<%= title %>'
@@ -63,19 +59,16 @@
           data: []
         }]
       }
+
       <% dataX.forEach(function(x) { %>
         option.xAxis.data.push("<%= x %>");
       <% }); %>
+
       <% dataY.forEach(function(y) { %>
         option.series[0].data.push(<%= y %>);
       <% }); %>
+
       myChart.setOption(option);
-      if (<%= isAndroid %>) {
-        // self.location.href = myChart.getDataURL();
-        var x = document.getElementById('chart');
-        x.parentNode.removeChild(x);
-        document.write(myChart.getDataURL());
-      }
     </script>
 </body>
 </html>

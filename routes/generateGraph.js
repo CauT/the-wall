@@ -15,6 +15,7 @@ function getLocalTime(nS) {
   }
 }
 
+// TODO: prevent SQL injection
 router.get('/', function(req, res, next) {
   database.simpleExecute(
     "SELECT DEVICE.DEVICEID,\
@@ -49,7 +50,6 @@ router.get('/', function(req, res, next) {
       title: '光线传感器',
       dataX: x,
       dataY: y,
-      isAndroid: req.query.platform === 'Android',
       height: req.query.height == undefined ? 200 : req.query.height,
       width: req.query.width == undefined ? 300 : req.query.width,
     });
@@ -57,10 +57,6 @@ router.get('/', function(req, res, next) {
   .catch(function(err) {
     next(err);
   });
-});
-
-router.get('/fuckAndroid', function(req, res, next) {
-
 });
 
 module.exports = router;
