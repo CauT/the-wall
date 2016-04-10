@@ -7,14 +7,7 @@ var lastDate = '';
 var numRows = 10;
 
 function getLocalTime(nS) {
-  var now = new Date(parseInt(nS) * 1000).toLocaleString();
-  if (lastDate.substring(0, 10) == now.substring(0, 10)) {
-    lastDate = now;
-    return now.substring(11);
-  } else {
-    lastDate = now;
-    return now;
-  }
+  return new Date(parseInt(nS) * 1000).toLocaleString();
 }
 
 function renderGraph(req, res, rows) {
