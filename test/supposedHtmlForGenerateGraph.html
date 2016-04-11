@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="/javascripts/echarts.common.min.js"></script>
+    <style>
+      .fill{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      .chart{
+        width: 900px;
+        height: 600px;
+      }
+    </style>
+</head>
+<body>
+    <div id="chart" class="chart"></div>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('chart'));
+      var option = {
+        title: {
+          text: '光线传感器'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data:[]
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: []
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          name: '光线传感器',
+          type: 'line',
+          stack: '总量',
+          data: []
+        }]
+      }
+
+      
+        option.xAxis.data.push("10/2/2015, 8:30:19 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:31:21 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:32:23 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:33:25 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:34:27 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:35:30 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:36:32 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:37:34 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:38:36 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:39:39 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:40:41 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:41:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:42:46 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:43:48 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:44:50 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:45:51 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:46:54 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:47:56 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:48:58 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:50:00 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:51:02 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:52:04 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:53:06 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:54:08 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:55:10 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:56:12 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:57:15 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:58:17 AM");
+      
+        option.xAxis.data.push("10/2/2015, 8:59:19 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:00:21 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:01:23 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:02:26 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:03:29 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:04:31 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:05:33 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:06:35 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:07:37 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:08:39 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:09:42 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:10:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:11:46 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:12:47 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:13:49 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:14:51 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:15:53 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:16:56 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:17:58 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:19:00 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:20:02 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:21:04 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:22:06 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:23:08 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:24:10 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:25:12 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:26:15 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:27:17 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:28:20 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:29:21 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:30:23 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:31:25 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:32:27 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:33:29 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:34:31 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:35:33 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:36:35 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:37:38 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:38:40 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:39:43 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:40:46 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:41:49 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:42:53 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:43:56 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:44:59 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:46:02 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:47:06 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:48:08 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:49:11 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:50:15 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:51:18 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:52:21 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:53:25 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:54:28 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:55:30 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:56:32 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:57:35 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:58:38 AM");
+      
+        option.xAxis.data.push("10/2/2015, 9:59:41 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:00:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:01:46 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:02:49 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:03:51 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:04:54 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:05:56 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:06:58 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:08:00 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:09:02 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:10:04 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:11:06 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:12:09 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:13:12 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:14:14 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:15:16 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:16:18 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:17:21 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:18:23 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:19:24 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:20:27 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:21:29 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:22:30 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:23:32 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:24:35 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:25:37 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:26:38 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:27:40 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:28:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:29:46 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:30:48 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:31:49 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:32:51 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:33:54 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:34:56 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:35:58 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:37:01 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:38:03 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:39:05 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:40:07 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:41:09 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:42:12 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:43:14 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:44:16 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:45:18 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:46:20 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:47:22 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:48:24 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:49:27 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:50:29 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:51:30 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:52:32 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:53:34 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:54:37 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:55:39 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:56:41 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:57:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:58:47 AM");
+      
+        option.xAxis.data.push("10/2/2015, 10:59:49 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:00:51 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:01:53 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:02:56 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:03:58 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:04:59 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:06:02 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:07:06 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:08:07 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:09:09 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:10:12 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:11:14 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:12:16 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:13:19 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:14:20 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:15:23 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:16:26 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:17:28 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:18:31 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:19:33 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:20:35 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:21:38 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:22:40 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:23:42 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:24:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:25:48 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:26:50 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:27:52 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:28:54 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:29:57 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:30:59 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:32:01 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:33:04 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:34:07 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:35:09 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:36:11 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:37:14 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:38:16 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:39:19 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:40:21 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:41:24 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:42:26 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:43:29 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:44:31 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:45:34 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:46:36 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:47:39 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:48:41 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:49:44 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:50:47 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:51:49 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:52:51 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:53:53 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:54:57 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:55:59 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:57:02 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:58:03 AM");
+      
+        option.xAxis.data.push("10/2/2015, 11:59:06 AM");
+      
+        option.xAxis.data.push("10/2/2015, 12:00:09 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:01:10 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:02:12 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:03:14 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:04:17 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:05:20 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:06:22 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:07:24 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:08:27 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:09:29 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:10:30 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:11:32 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:12:34 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:13:37 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:14:40 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:15:42 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:16:45 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:17:48 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:18:50 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:19:52 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:20:54 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:21:56 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:22:58 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:24:00 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:25:02 PM");
+      
+        option.xAxis.data.push("10/2/2015, 12:26:04 PM");
+      
+
+      
+        option.series[0].data.push(30228.125);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(31248);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(31260.438000000002);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(32243);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(35277.75);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36111.062);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(36297.625);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(34058.875);
+      
+        option.series[0].data.push(41322.375);
+      
+        option.series[0].data.push(42304.938);
+      
+        option.series[0].data.push(15141.4375);
+      
+        option.series[0].data.push(41322.375);
+      
+        option.series[0].data.push(43324.812);
+      
+        option.series[0].data.push(31521.625);
+      
+        option.series[0].data.push(27218.25);
+      
+        option.series[0].data.push(24183.5);
+      
+        option.series[0].data.push(14121.5625);
+      
+        option.series[0].data.push(29220.688000000002);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(15153.875);
+      
+        option.series[0].data.push(26235.688000000002);
+      
+        option.series[0].data.push(37267.75);
+      
+        option.series[0].data.push(36795.125);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(11124.125);
+      
+        option.series[0].data.push(38287.625);
+      
+        option.series[0].data.push(29767.938000000002);
+      
+        option.series[0].data.push(37267.75);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(36285.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(36509.062);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(37280.188);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(38125.938);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(29009.25);
+      
+        option.series[0].data.push(40302.5);
+      
+        option.series[0].data.push(40302.5);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(40302.5);
+      
+        option.series[0].data.push(40302.5);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(39282.625);
+      
+        option.series[0].data.push(40302.5);
+      
+        option.series[0].data.push(41322.375);
+      
+        option.series[0].data.push(32292.75);
+      
+        option.series[0].data.push(41322.375);
+      
+        option.series[0].data.push(44307.375);
+      
+        option.series[0].data.push(18176.188000000002);
+      
+        option.series[0].data.push(42304.938);
+      
+        option.series[0].data.push(42304.938);
+      
+        option.series[0].data.push(13139);
+      
+        option.series[0].data.push(13126.5625);
+      
+        option.series[0].data.push(13139);
+      
+        option.series[0].data.push(13139);
+      
+        option.series[0].data.push(13126.5625);
+      
+        option.series[0].data.push(13126.5625);
+      
+        option.series[0].data.push(12106.6875);
+      
+        option.series[0].data.push(10104.25);
+      
+        option.series[0].data.push(10104.25);
+      
+        option.series[0].data.push(10104.25);
+      
+        option.series[0].data.push(10104.25);
+      
+        option.series[0].data.push(11124.125);
+      
+        option.series[0].data.push(12106.6875);
+      
+        option.series[0].data.push(20166.188);
+      
+        option.series[0].data.push(21198.5);
+      
+        option.series[0].data.push(37118.5);
+      
+        option.series[0].data.push(35265.312);
+      
+        option.series[0].data.push(23375.062);
+      
+        option.series[0].data.push(14121.5625);
+      
+        option.series[0].data.push(13139);
+      
+        option.series[0].data.push(12106.6875);
+      
+        option.series[0].data.push(12106.6875);
+      
+        option.series[0].data.push(11124.125);
+      
+        option.series[0].data.push(11124.125);
+      
+        option.series[0].data.push(15141.4375);
+      
+        option.series[0].data.push(37267.75);
+      
+        option.series[0].data.push(34282.75);
+      
+        option.series[0].data.push(26161.061999999998);
+      
+        option.series[0].data.push(30389.812);
+      
+        option.series[0].data.push(34245.438);
+      
+        option.series[0].data.push(33262.875);
+      
+        option.series[0].data.push(34282.75);
+      
+        option.series[0].data.push(38337.375);
+      
+        option.series[0].data.push(31683.312);
+      
+        option.series[0].data.push(35725.5);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(26546.625);
+      
+        option.series[0].data.push(39270.188);
+      
+        option.series[0].data.push(29357.5);
+      
+        option.series[0].data.push(33238);
+      
+        option.series[0].data.push(27355.061999999998);
+      
+        option.series[0].data.push(28300.311999999998);
+      
+        option.series[0].data.push(35986.688);
+      
+        option.series[0].data.push(38300.062);
+      
+        option.series[0].data.push(40302.5);
+      
+        option.series[0].data.push(34519.062);
+      
+        option.series[0].data.push(39270.188);
+      
+        option.series[0].data.push(14121.5625);
+      
+        option.series[0].data.push(19183.625);
+      
+        option.series[0].data.push(38287.625);
+      
+        option.series[0].data.push(39270.188);
+      
+        option.series[0].data.push(35501.625);
+      
+        option.series[0].data.push(21285.562);
+      
+        option.series[0].data.push(26521.75);
+      
+
+      myChart.setOption(option);
+    </script>
+</body>
+</html>

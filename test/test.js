@@ -1,6 +1,9 @@
 var assert = require('assert');
 var http = require('http');
 var supposedJson = require('./supposedJson');
+var Promise = require('bluebird');
+var fs = Promise.promisifyAll(require('fs'));
+var path = require('path');
 
 var options = {
   hostname: 'localhost',
@@ -60,6 +63,26 @@ describe('/v1', function() {
           supposedJson.agri_env.current_with_deviceName_Light_and_stationName_A1
         );
       });
+    });
+  });
+  // to test pat:/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_id=172&width=900&height=600
+  describe('/utils', function() {
+    describe('generate_graph', function() {
+      it('query with specified start_time and end_time and device_id:',
+      function(done) {
+        var filePath = path.join(__dirname, 'supposedHtmlForGenerateGraph.html');
+        fs.readFileAsync(filePath, 'utf-8')
+        .then(function(data) {
+          getJsonAndTest(
+            done,
+            '/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_id=172&width=900&height=600',
+            data
+          );
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+      })
     });
   });
 });

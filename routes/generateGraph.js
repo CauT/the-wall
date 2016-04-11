@@ -3,9 +3,6 @@ var router = express.Router();
 var database = require('../database/database');
 var Promise = require('es6-promise').Promise;
 
-var lastDate = '';
-var numRows = 10;
-
 function getLocalTime(nS) {
   return new Date(parseInt(nS) * 1000).toLocaleString();
 }
