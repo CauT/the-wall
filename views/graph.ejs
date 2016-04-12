@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>ECharts</title>
-    <!-- 引入 echarts.js -->
     <script src="/javascripts/echarts.common.min.js"></script>
     <style>
       .fill{
@@ -60,13 +59,17 @@
         }]
       }
 
-      <% dataX.forEach(function(x) { %>
-        option.xAxis.data.push("<%= x %>");
-      <% }); %>
+      option.xAxis.data = [
+        <% dataX.forEach(function(x) {%>
+          "<%= x %>",
+        <% }); %>
+      ];
 
-      <% dataY.forEach(function(y) { %>
-        option.series[0].data.push(<%= y %>);
-      <% }); %>
+      option.series[0].data = [
+        <% dataY.forEach(function(y) {%>
+          <%= y %>,
+        <% }); %>
+      ];
 
       myChart.setOption(option);
     </script>

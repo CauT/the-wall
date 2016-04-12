@@ -84,7 +84,6 @@ router.get('/', function(req, res, next) {
       var filterGap = Math.floor(
         (req.query.end_time - req.query.start_time) / (120 * 100)
       );
-      console.log(filterGap);
       return new Promise(function(resolve, reject) {
         resFilter(resolve, reject,
           connection, results.resultSet, filterGap, filtered);
