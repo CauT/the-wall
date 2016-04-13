@@ -65,24 +65,39 @@ describe('/v1', function() {
       });
     });
   });
-  // to test pat:/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_id=172&width=900&height=600
+  // to test path:/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_id=172&width=900&height=600
   describe('/utils', function() {
     describe('generate_graph', function() {
-      it('query with specified start_time and end_time and device_id:',
+      it('query with specified start_time and end_time and **single** device_id:',
       function(done) {
         var filePath = path.join(__dirname, 'supposedHtmlForGenerateGraph.html');
         fs.readFileAsync(filePath, 'utf-8')
         .then(function(data) {
           getJsonAndTest(
             done,
-            '/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_id=172&width=900&height=600',
+            '/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_ids=172&width=900&height=600',
             data
           );
         })
         .catch(function(err) {
           console.log(err);
         });
-      })
+      });
+      it('query with specified start_time and end_time and **multi** device_id:',
+      function(done) {
+        var filePath = path.join(__dirname, 'supposedHtmlForGenerateMultiCurveGraph.html');
+        fs.readFileAsync(filePath, 'utf-8')
+        .then(function(data) {
+          getJsonAndTest(
+            done,
+            'http://localhost:3000/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_ids=172;174;176;178&width=900&height=600',
+            data
+          );
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+      });
     });
   });
 });

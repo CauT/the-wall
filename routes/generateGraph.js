@@ -60,7 +60,7 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
 
 // TODO: prevent SQL injection
 router.get('/', function(req, res, next) {
-  var device_ids = req.query.device_ids.toString().split(';');
+  var device_ids;
 
   (function secureCheck() {
     let qry = req.query;
@@ -69,8 +69,11 @@ router.get('/', function(req, res, next) {
       qry.device_ids == undefined
       || qry.start_time == undefined
       || qry.end_time == undefined
-    )
+    ) {
       throw new Error('device_ids或start_time或end_time参数为undefined');
+    } else {
+     device_ids = req.query.device_ids.toString().split(';');  
+    }
 
     if (req.query.end_time < req.query.start_time) {
       throw new Error('终止时间小于起始时间');
@@ -112,6 +115,10 @@ router.get('/', function(req, res, next) {
         connection
       )
       .then(function(results) {
+        if (results == undefined)
+          // even if at least one of multi query was succeed
+          // fast-fail is essential for secure
+          throw new Error('数据库返回结果为空');
         var filtered = [];
         var filterGap = Math.floor(
           (end_time - start_time) / (120 * 100)

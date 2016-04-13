@@ -31,7 +31,11 @@
           trigger: 'axis'
         },
         legend: {
-          data:[]
+          data:[
+            <% titles.forEach(function(title) { %>
+              '<%= title %>',
+            <% }) %>
+          ]
         },
         grid: {
           left: '3%',
