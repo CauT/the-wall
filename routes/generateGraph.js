@@ -1,24 +1,36 @@
+'use strict'
+
 var express = require('express');
 var router = express.Router();
 var database = require('../database/database');
-var Promise = require('es6-promise').Promise;
+var Promise = require('bluebird');
 
 function getLocalTime(nS) {
   return new Date(parseInt(nS) * 1000).toLocaleString();
 }
 
-function renderGraph(req, res, rows) {
+function renderGraph(req, res, filtereds) {
   var x = [];
-  var y = [];
-  rows.forEach(function(row) {
+  var ys = [];
+  var titles = [];
+
+  filtereds[0].forEach(function(row) {
     x.push(getLocalTime(row.RECTIME));
-    y.push(row.ANALOGYVALUE);
+  });
+
+  filtereds.forEach(function(filtered){
+    var y = [];
+    filtered.forEach(function(row) {
+      y.push(row.ANALOGYVALUE);
+    });
+    ys.push(y);
+    titles.push(filtered[0].DEVICENAME + ': ' + filtered[0].DEVICECODE);
   });
 
   res.render('graph', {
-    title: '光线传感器',
+    titles: titles,
     dataX: x,
-    dataY: y,
+    dataY: ys,
     height: req.query.height == undefined ? 200 : req.query.height,
     width: req.query.width == undefined ? 300 : req.query.width,
   });
@@ -48,62 +60,97 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
 
 // TODO: prevent SQL injection
 router.get('/', function(req, res, next) {
-  database.getConnection()
-  .then(function(connection) {
-    database.execute(
-      "SELECT\
-        DEVICE.DEVICEID,\
-        DEVICECODE,\
-        DEVICENAME,\
-        UNIT,\
-        ANALOGYVALUE,\
-        DEVICEHISTROY.RECTIME\
-      FROM\
-        DEVICE INNER JOIN DEVICEHISTROY\
-      ON\
-        DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
-      WHERE\
-        DEVICE.DEVICEID = :device_id\
-        AND DEVICEHISTROY.RECTIME\
-        BETWEEN :start_time AND :end_time\
-      ORDER\
-        BY RECTIME",
-      [
-        req.query.device_id,
-        req.query.start_time,
-        req.query.end_time
-      ],
-      {
-        outFormat: database.OBJECT,
-        resultSet: true
-      },
-      connection
+  var device_ids = req.query.device_ids.toString().split(';');
+  var start_times = req.query.start_times.toString().split(';');
+  var end_times = req.query.end_times.toString().split(';');
+
+  (function secureCheck() {
+    let qry = req.query;
+
+    if (
+      qry.device_ids == undefined
+      || qry.start_times == undefined
+      || qry.end_times == undefined
     )
-    .then(function(results) {
-      var filtered = [];
-      var filterGap = Math.floor(
-        (req.query.end_time - req.query.start_time) / (120 * 100)
-      );
-      return new Promise(function(resolve, reject) {
-        resFilter(resolve, reject,
-          connection, results.resultSet, filterGap, filtered);
-      });
-    })
-    .then(function(filtered) {
-      renderGraph(req, res, filtered);
-    })
-    .catch(function(err) {
-      console.log(err);
-      process.nextTick(function() {
-        database.releaseConnection(connection);
+      throw new Error('device_ids或start_times或end_times参数为undefined');
+
+    if (!(
+      device_ids.length == start_times.length
+      && device_ids.length == end_times.length
+      && start_times.length == end_times.length
+    ))
+      throw new Error('生成图表的3个请求参数数组长度不相等');
+
+    for(let i=0; i<device_ids.length; i++) {
+      if (end_times[i] < start_times[i]) {
+        throw new Error('至少一组参数中终止时间小于起始时间');
+      }
+    }
+  })();
+
+  var filterPromises = [];
+  var queryPromises = [];
+
+  function createQuerySingleDeviceDataPromise(device_id, start_time, end_time) {
+    return database.getConnection()
+    .then(function(connection) {
+      return database.execute(
+        "SELECT\
+          DEVICE.DEVICEID,\
+          DEVICECODE,\
+          DEVICENAME,\
+          UNIT,\
+          ANALOGYVALUE,\
+          DEVICEHISTROY.RECTIME\
+        FROM\
+          DEVICE INNER JOIN DEVICEHISTROY\
+        ON\
+          DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
+        WHERE\
+          DEVICE.DEVICEID = :device_id\
+          AND DEVICEHISTROY.RECTIME\
+          BETWEEN :start_time AND :end_time\
+        ORDER\
+          BY RECTIME",
+        [
+          device_id,
+          start_time,
+          end_time
+        ],
+        {
+          outFormat: database.OBJECT,
+          resultSet: true
+        },
+        connection
+      )
+      .then(function(results) {
+        var filtered = [];
+        var filterGap = Math.floor(
+          (end_time - start_time) / (120 * 100)
+        );
+        return new Promise(function(resolve, reject) {
+          resFilter(resolve, reject,
+            connection, results.resultSet, filterGap, filtered);
+        });
+      })
+      .catch(function(err) {
+        console.log(err);
+        process.nextTick(function() {
+          database.releaseConnection(connection);
+        });
       });
     });
-  }).catch(function(err) {
-    console.log(err);
-    process.nextTick(function() {
-      database.releaseConnection(connection);
-    });
-  });
+  }
+
+  for(let i=0; i<device_ids.length; i++) {
+    queryPromises.push(createQuerySingleDeviceDataPromise(
+      device_ids[i], start_times[i], end_times[i]));
+  };
+
+  Promise.all(queryPromises)
+  .then(function(filtereds) {
+    renderGraph(req, res, filtereds);
+  })
 });
 
 module.exports = router;

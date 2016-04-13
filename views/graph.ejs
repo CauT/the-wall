@@ -25,7 +25,7 @@
       var myChart = echarts.init(document.getElementById('chart'));
       var option = {
         title: {
-          text: '<%= title %>'
+          text: '光线传感器'
         },
         tooltip: {
           trigger: 'axis'
@@ -51,23 +51,25 @@
         yAxis: {
           type: 'value'
         },
-        series: [{
-          name: '<%= title %>',
-          type: 'line',
-          stack: '总量',
-          data: []
-        }]
+        series: [
+          <% for (var i in dataY) { %>
+            {
+              name: '<%= titles[i] %>',
+              type: 'line',
+              stack: '总量',
+              data: [
+                <% dataY[i].forEach(function (y) { %>
+                  <%= y %>,
+                <% }); %>
+              ]
+            },
+          <% } %>
+        ]
       }
 
       option.xAxis.data = [
         <% dataX.forEach(function(x) {%>
           "<%= x %>",
-        <% }); %>
-      ];
-
-      option.series[0].data = [
-        <% dataY.forEach(function(y) {%>
-          <%= y %>,
         <% }); %>
       ];
 
