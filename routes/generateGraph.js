@@ -61,34 +61,22 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
 // TODO: prevent SQL injection
 router.get('/', function(req, res, next) {
   var device_ids = req.query.device_ids.toString().split(';');
-  var start_times = req.query.start_times.toString().split(';');
-  var end_times = req.query.end_times.toString().split(';');
 
   (function secureCheck() {
     let qry = req.query;
 
     if (
       qry.device_ids == undefined
-      || qry.start_times == undefined
-      || qry.end_times == undefined
+      || qry.start_time == undefined
+      || qry.end_time == undefined
     )
-      throw new Error('device_ids或start_times或end_times参数为undefined');
+      throw new Error('device_ids或start_time或end_time参数为undefined');
 
-    if (!(
-      device_ids.length == start_times.length
-      && device_ids.length == end_times.length
-      && start_times.length == end_times.length
-    ))
-      throw new Error('生成图表的3个请求参数数组长度不相等');
-
-    for(let i=0; i<device_ids.length; i++) {
-      if (end_times[i] < start_times[i]) {
-        throw new Error('至少一组参数中终止时间小于起始时间');
-      }
+    if (req.query.end_time < req.query.start_time) {
+      throw new Error('终止时间小于起始时间');
     }
   })();
 
-  var filterPromises = [];
   var queryPromises = [];
 
   function createQuerySingleDeviceDataPromise(device_id, start_time, end_time) {
@@ -144,7 +132,7 @@ router.get('/', function(req, res, next) {
 
   for(let i=0; i<device_ids.length; i++) {
     queryPromises.push(createQuerySingleDeviceDataPromise(
-      device_ids[i], start_times[i], end_times[i]));
+      device_ids[i], req.query.start_time, req.query.end_time));
   };
 
   Promise.all(queryPromises)
