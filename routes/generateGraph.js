@@ -19,6 +19,10 @@ function renderGraph(req, res, filtereds) {
   });
 
   filtereds.forEach(function(filtered){
+    if (filtered[0] == undefined)
+      // even if at least one of multi query was succeed
+      // fast-fail is essential for secure
+      throw new Error('数据库返回结果为空');
     var y = [];
     filtered.forEach(function(row) {
       y.push(row.ANALOGYVALUE);
@@ -45,7 +49,6 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
         console.log(err.message);
         reject(err);
       } else if (rows.length == 0) {
-        console.log("rows is end of file");
         resolve(filtered);
         process.nextTick(function() {
           database.releaseConnection(connection);
@@ -58,94 +61,106 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
   );
 }
 
-// TODO: prevent SQL injection
-router.get('/', function(req, res, next) {
-  var device_ids;
-
-  (function secureCheck() {
-    let qry = req.query;
-
-    if (
-      qry.device_ids == undefined
-      || qry.start_time == undefined
-      || qry.end_time == undefined
-    ) {
-      throw new Error('device_ids或start_time或end_time参数为undefined');
-    } else {
-     device_ids = req.query.device_ids.toString().split(';');  
-    }
-
-    if (req.query.end_time < req.query.start_time) {
-      throw new Error('终止时间小于起始时间');
-    }
-  })();
-
-  var queryPromises = [];
-
-  function createQuerySingleDeviceDataPromise(device_id, start_time, end_time) {
-    return database.getConnection()
-    .then(function(connection) {
-      return database.execute(
-        "SELECT\
-          DEVICE.DEVICEID,\
-          DEVICECODE,\
-          DEVICENAME,\
-          UNIT,\
-          ANALOGYVALUE,\
-          DEVICEHISTROY.RECTIME\
-        FROM\
-          DEVICE INNER JOIN DEVICEHISTROY\
-        ON\
-          DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
-        WHERE\
-          DEVICE.DEVICEID = :device_id\
-          AND DEVICEHISTROY.RECTIME\
-          BETWEEN :start_time AND :end_time\
-        ORDER\
-          BY RECTIME",
-        [
-          device_id,
-          start_time,
-          end_time
-        ],
-        {
-          outFormat: database.OBJECT,
-          resultSet: true
-        },
-        connection
-      )
-      .then(function(results) {
-        if (results == undefined)
-          // even if at least one of multi query was succeed
-          // fast-fail is essential for secure
-          throw new Error('数据库返回结果为空');
-        var filtered = [];
-        var filterGap = Math.floor(
-          (end_time - start_time) / (120 * 100)
-        );
-        return new Promise(function(resolve, reject) {
-          resFilter(resolve, reject,
-            connection, results.resultSet, filterGap, filtered);
-        });
-      })
-      .catch(function(err) {
-        console.log(err);
-        process.nextTick(function() {
-          database.releaseConnection(connection);
-        });
+function createQuerySingleDeviceDataPromise(req, res, device_id, start_time, end_time) {
+  return database.getConnection()
+  .then(function(connection) {
+    return database.execute(
+      "SELECT\
+        DEVICE.DEVICEID,\
+        DEVICECODE,\
+        DEVICENAME,\
+        UNIT,\
+        ANALOGYVALUE,\
+        DEVICEHISTROY.RECTIME\
+      FROM\
+        DEVICE INNER JOIN DEVICEHISTROY\
+      ON\
+        DEVICE.DEVICEID = DEVICEHISTROY.DEVICEID\
+      WHERE\
+        DEVICE.DEVICEID = :device_id\
+        AND DEVICEHISTROY.RECTIME\
+        BETWEEN :start_time AND :end_time\
+      ORDER\
+        BY RECTIME",
+      [
+        device_id,
+        start_time,
+        end_time
+      ],
+      {
+        outFormat: database.OBJECT,
+        resultSet: true
+      },
+      connection
+    )
+    .then(function(results) {
+      var filtered = [];
+      var filterGap = Math.floor(
+        (end_time - start_time) / (120 * 100)
+      );
+      return new Promise(function(resolve, reject) {
+        resFilter(resolve, reject,
+          connection, results.resultSet, filterGap, filtered);
+      });
+    })
+    .catch(function(err) {
+      res.send({
+        status: 'error',
+        message: err.message
+      });
+      process.nextTick(function() {
+        database.releaseConnection(connection);
       });
     });
+  });
+}
+
+function secureCheck(req, res) {
+  let qry = req.query;
+
+  if (
+    qry.device_ids == undefined
+    || qry.start_time == undefined
+    || qry.end_time == undefined
+  ) {
+    throw new Error('device_ids或start_time或end_time参数为undefined');
   }
 
-  for(let i=0; i<device_ids.length; i++) {
-    queryPromises.push(createQuerySingleDeviceDataPromise(
-      device_ids[i], req.query.start_time, req.query.end_time));
-  };
+  if (req.query.end_time < req.query.start_time) {
+    throw new Error('终止时间小于起始时间');
+  }
+};
 
-  Promise.all(queryPromises)
-  .then(function(filtereds) {
-    renderGraph(req, res, filtereds);
-  })
+// TODO: prevent SQL injection
+router.get('/', function(req, res, next) {
+  try {
+    var device_ids;
+    var queryPromises = [];
+
+    secureCheck(req, res);
+
+    device_ids = req.query.device_ids.toString().split(';');
+
+    for(let i=0; i<device_ids.length; i++) {
+      queryPromises.push(createQuerySingleDeviceDataPromise(
+        req, res, device_ids[i], req.query.start_time, req.query.end_time));
+    };
+
+    Promise.all(queryPromises)
+    .then(function(filtereds) {
+      renderGraph(req, res, filtereds);
+    }).catch(function(err) {
+      res.send({
+        status: 'error',
+        message: err.message
+      });
+    })
+  } catch(err) {
+    res.send({
+      status: 'error',
+      message: err.message
+    });
+  }
 });
 
 module.exports = router;
