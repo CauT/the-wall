@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "./node_modules/.bin/_mocha -C",
+    "test-cover": "istanbul cover ./node_modules/.bin/_mocha -- -C",
+    "count": "cloc app.js package.json settings.json routes/ database/ views/ test/test.js"
   },
   "dependencies": {
     "async": "^1.5.2",
