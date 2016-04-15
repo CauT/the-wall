@@ -1,29 +1,26 @@
 var assert = require('assert');
 var http = require('http');
-var supposedJson = require('./supposedJson');
+var supertest = require('supertest');
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 var path = require('path');
 
-var options = {
-  hostname: 'localhost',
-  port: 3000,
-  method: 'GET'
-};
+var app = require('../app');
+var supposedJson = require('./supposedJson');
 
-function getJsonAndTest(done, path, equal) {
-  options.path = path;
-  var req = http.request(options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function(chunk) {
-      assert.equal(chunk, equal);
-      done();
-    })
+var dbconfig = require('../database/dbconfig.js');
+var database = require('../database/database.js');
+
+function getJsonAndTest(done, path, toEqual) {
+  supertest(app)
+  .get(path)
+  // .expect('Content-Type', 'application/json; charset=utf-8')
+  .expect(200)
+  .end(function(err, data) {
+    if (err) console.log(err);
+    assert.equal(data.text, toEqual);
+    done();
   });
-  req.on('error', function(e) {
-    console.log('problem with request: ' + e.message);
-  });
-  req.end();
 }
 
 describe('/v1', function() {
@@ -33,8 +30,10 @@ describe('/v1', function() {
       // to test path:/v1/device/info/type_list
       describe('/type_list', function() {
         it('should return json as expected', function(done) {
-          getJsonAndTest(done, '/v1/device/info/type_list',
-            supposedJson.device.type_list);
+          database.createPool(dbconfig).then(function() {
+            getJsonAndTest(done, '/v1/device/info/type_list',
+              supposedJson.device.type_list);
+          });
         });
       });
 
@@ -47,6 +46,7 @@ describe('/v1', function() {
       });
     });
   });
+
   // to test path:/v1/data/agri_env/current?deviceType={}&stationName={}
   describe('/data', function() {
     describe('/agri_env', function() {
@@ -69,6 +69,7 @@ describe('/v1', function() {
       });
     });
   });
+
   // to test path:/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_id=172&width=900&height=600
   describe('/utils', function() {
     describe('generate_graph', function() {

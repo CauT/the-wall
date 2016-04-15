@@ -17,7 +17,7 @@ router.get('/info/type_list', function(req, res, next) {
       }
     )
       .then(function(results) {
-        res.send(results.rows);
+        res.json(results.rows);
       })
       .catch(function(err) {
         next(err);
@@ -34,7 +34,7 @@ router.get('/info/station_list', function(req, res, next) {
       }
     )
       .then(function(results) {
-        res.send(results.rows);
+        res.json(results.rows);
       })
       .catch(function(err) {
         next(err);
