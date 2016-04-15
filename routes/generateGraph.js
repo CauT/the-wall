@@ -104,7 +104,7 @@ function createQuerySingleDeviceDataPromise(req, res, device_id, start_time, end
       });
     })
     .catch(function(err) {
-      res.send({
+      res.status(500).json({
         status: 'error',
         message: err.message
       });
@@ -150,13 +150,13 @@ router.get('/', function(req, res, next) {
     .then(function(filtereds) {
       renderGraph(req, res, filtereds);
     }).catch(function(err) {
-      res.send({
+      res.status(500).json({
         status: 'error',
         message: err.message
       });
     })
   } catch(err) {
-    res.send({
+    res.status(500).json({
       status: 'error',
       message: err.message
     });

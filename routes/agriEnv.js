@@ -44,7 +44,7 @@ router.get('/current', function(req, res, next) {
     }
   )
     .then(function(results) {
-      res.send(results.rows);
+      res.json(results.rows);
     })
     .catch(function(err) {
       next(err);
