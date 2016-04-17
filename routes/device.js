@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var database = require('../database/database.js');
+var oracle = require('../database/OracleWrapper');
 
 var getListofDeviceType =
   "select distinct devicename from device order by devicename";
@@ -9,11 +9,11 @@ var getListofStationId =
 
 // path:/v1/device/info/type_list
 router.get('/info/type_list', function(req, res, next) {
-    database.simpleExecute(
+    oracle.simpleExecute(
       getListofDeviceType,
       {}, //no binds
       {
-        outFormat: database.OBJECT
+        outFormat: oracle.OBJECT
       }
     )
       .then(function(results) {
@@ -26,11 +26,11 @@ router.get('/info/type_list', function(req, res, next) {
 
 // path:/v1/device/info/station_list
 router.get('/info/station_list', function(req, res, next) {
-    database.simpleExecute(
+    oracle.simpleExecute(
       getListofStationId,
       {}, //no binds
       {
-        outFormat: database.OBJECT
+        outFormat: oracle.OBJECT
       }
     )
       .then(function(results) {

@@ -8,8 +8,8 @@ var path = require('path');
 var app = require('../app');
 var supposedJson = require('./supposedJson');
 
-var dbconfig = require('../database/dbconfig.js');
-var database = require('../database/database.js');
+var dbconfig = require('../database/OracleConfig');
+var database = require('../database/OracleWrapper');
 
 describe('/v1', function() {
   describe('/device', function() {

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var database = require('../database/database.js');
+var oracle = require('../database/OracleWrapper');
 
 var getCurrentValueOfSelectedDevices = function(deviceType, stationName) {
   var sql = "select devicecode,devicename,value,unit from device";
@@ -36,11 +36,11 @@ var getCurrentValueOfSelectedDevices = function(deviceType, stationName) {
 
 // path:/v1/data/agri_env/current?deviceType={}&stationName={}
 router.get('/current', function(req, res, next) {
-  database.simpleExecute(
+  oracle.simpleExecute(
     getCurrentValueOfSelectedDevices(req.query.deviceType, req.query.stationName),
     {}, //no binds
     {
-      outFormat: database.OBJECT
+      outFormat: oracle.OBJECT
     }
   )
     .then(function(results) {

@@ -7,8 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('the-wall:server');
 var http = require('http');
-var dbconfig = require('../database/dbconfig.js');
-var database = require('../database/database.js');
+var dbconfig = require('../database/OracleConfig');
+var database = require('../database/OracleWrapper');
 
 process.on('uncaughtException', function(err) {
     console.error('Uncaught exception ', err);

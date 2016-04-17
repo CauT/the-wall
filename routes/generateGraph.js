@@ -2,7 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var database = require('../database/database');
+var oracle = require('../database/OracleWrapper');
 var Promise = require('bluebird');
 
 function getLocalTime(nS) {
@@ -51,7 +51,7 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
       } else if (rows.length == 0) {
         resolve(filtered);
         process.nextTick(function() {
-          database.releaseConnection(connection);
+          oracle.releaseConnection(connection);
         });
       } else if (rows.length > 0) {
         filtered.push(rows[0]);
@@ -62,9 +62,9 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
 }
 
 function createQuerySingleDeviceDataPromise(req, res, device_id, start_time, end_time) {
-  return database.getConnection()
+  return oracle.getConnection()
   .then(function(connection) {
-    return database.execute(
+    return oracle.execute(
       "SELECT\
         DEVICE.DEVICEID,\
         DEVICECODE,\
@@ -88,7 +88,7 @@ function createQuerySingleDeviceDataPromise(req, res, device_id, start_time, end
         end_time
       ],
       {
-        outFormat: database.OBJECT,
+        outFormat: oracle.OBJECT,
         resultSet: true
       },
       connection
@@ -109,7 +109,7 @@ function createQuerySingleDeviceDataPromise(req, res, device_id, start_time, end
         message: err.message
       });
       process.nextTick(function() {
-        database.releaseConnection(connection);
+        oracle.releaseConnection(connection);
       });
     });
   });
