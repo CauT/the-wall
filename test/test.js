@@ -8,8 +8,10 @@ var path = require('path');
 var app = require('../app');
 var supposedJson = require('./supposedJson');
 
-var dbconfig = require('../database/OracleConfig');
-var database = require('../database/OracleWrapper');
+var dbconfig = require('../Config').oracle;
+var oracle = require('../database/OracleWrapper');
+var redis = require('../database/RedisWrapper').redisClient;
+var utility = require('../routes/globalUtility');
 
 describe('/v1', function() {
   describe('/device', function() {
@@ -18,7 +20,7 @@ describe('/v1', function() {
       // to test path:/v1/device/info/type_list
       describe('/type_list', function() {
         it('should return json as expected', function(done) {
-          database.createPool(dbconfig).then(function() {
+          oracle.createPool(dbconfig).then(function() {
             supertest(app)
             .get('/v1/device/info/type_list')
             .expect(200)
@@ -163,7 +165,7 @@ describe('/utils', function() {
         });
       });
 
-      it('is queried with wrong device_id, so get null database result', function(done) {
+      it('is queried with wrong device_id, so get null oracle result', function(done) {
         supertest(app)
         .get('/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_ids=172;171&width=900&height=600')
         .expect(500)
@@ -174,5 +176,30 @@ describe('/utils', function() {
         });
       });
     });
+  });
+});
+
+describe('global utility', function() {
+  describe('token', function() {
+    var tmpToken;
+    describe('function createToken()', function() {
+      it('should create a token', function() {
+        tmpToken = utility.createToken('userForTest');
+        assert.equal(typeof(tmpToken), 'string');
+      });
+    });
+
+    describe('function verifyToken()', function() {
+      it('should verify a token', function(done) {
+        assert(typeof(tmpToken), 'string');
+        utility.verifyToken(tmpToken)
+        .then(function(obj) {
+          assert(typeof(obj), 'object');
+          console.log(obj);
+          done();
+        });
+      });
+    });
+
   });
 });

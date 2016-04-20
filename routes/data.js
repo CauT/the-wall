@@ -1,6 +1,6 @@
 var express = require('express');
-var agriEnv = require('./agriEnv');
 var router = express.Router();
+var agriEnv = require('./agriEnv');
 
 router.use('/agri_env', agriEnv);
 
