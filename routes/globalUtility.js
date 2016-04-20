@@ -9,6 +9,7 @@ var config = require('../Config');
 Promise.promisifyAll(jwt);
 
 var redisTokenKeyPrefix = 'unexpired.token:';
+var redisPasswordKeyPrefix = 'users.password:';
 var tokenExpireTime = '1 ms';
 var tokenExistedFlag = 1;
 
@@ -36,4 +37,5 @@ module.exports = {
   createToken,
   verifyToken,
   redisTokenKeyPrefix,
+  redisPasswordKeyPrefix,
 };

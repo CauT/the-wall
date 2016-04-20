@@ -11,5 +11,5 @@ module.exports = {
   redis: {
     socket: 6379
   },
-  jwt_secret: "Hear Me Roar",
+  jwt_secret: 'Hear Me Roar',
 };

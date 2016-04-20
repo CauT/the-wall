@@ -202,4 +202,29 @@ describe('global utility', function() {
     });
 
   });
+
+  describe('signin', function() {
+    it('should login succeed', function(done) {
+      supertest(app)
+      .get('/v1/signin?username=hello&password=world')
+      .expect(200)
+      .end(function(err, data) {
+        if (err) console.log(err);
+        assert.equal(data.text.slice(0, 45), supposedJson.signin.login_succeed.slice(0, 45));
+        done();
+      });
+    });
+
+    it('should login failed', function(done) {
+      supertest(app)
+      .get('/v1/signin?username=hello&password=worl')
+      .expect(200)
+      .end(function(err, data) {
+        if (err) console.log(err);
+        assert.equal(data.text, supposedJson.signin.login_failed);
+        done();
+      });
+    });
+
+  });
 });
