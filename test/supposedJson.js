@@ -15,8 +15,9 @@ module.exports = {
       exception_handle_database_return_null: '{"status":"error","message":"数据库返回结果为空"}',
     }
   },
-  signin: {
-    login_succeed: '{"v":"1.0","ret":{"status":"SUCCESS"},"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImhlbGxvIiwiaWF0IjoxNDYxMTQxMzAwLCJleHAiOjE0NjExNDEzMDF9.mdho49zbYALyy3_T5e-OVLf23v-aY4LUDjkr70hpMsE"}',
-    login_failed: '{"v":"1.0","ret":{"status":"ERROR","error_code":1}}',
+  sign: {
+    sign_in_succeed: '{"v":"1.0","ret":{"status":"SUCCESS"},"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImhlbGxvIiwiaWF0IjoxNDYxMTQxMzAwLCJleHAiOjE0NjExNDEzMDF9.mdho49zbYALyy3_T5e-OVLf23v-aY4LUDjkr70hpMsE"}',
+    sign_in_failed: '{"v":"1.0","ret":{"status":"ERROR","error_code":1}}',
+    sign_out_succeed: '{"ret":"SUCCESS"}',
   }
 }

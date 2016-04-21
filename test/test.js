@@ -218,28 +218,44 @@ describe('/utils', function() {
   });
 });
 
-describe('signin', function() {
-  it('should login succeed', function(done) {
-    supertest(app)
-    .get('/v1/signin?username=hello&password=world')
-    .set('Authorization', 'Bearer ' + tmpToken)
-    .expect(200)
-    .end(function(err, data) {
-      if (err) console.log(err);
-      assert.equal(data.text.slice(0, 45), supposedJson.signin.login_succeed.slice(0, 45));
-      done();
+describe('sign', function() {
+  describe('signin', function() {
+    it('should sign in succeed', function(done) {
+      supertest(app)
+      .get('/v1/signin?username=hello&password=world')
+      .set('Authorization', 'Bearer ' + tmpToken)
+      .expect(200)
+      .end(function(err, data) {
+        if (err) console.log(err);
+        assert.equal(data.text.slice(0, 45), supposedJson.sign.sign_in_succeed.slice(0, 45));
+        done();
+      });
+    });
+
+    it('should sign in failed', function(done) {
+      supertest(app)
+      .get('/v1/signin?username=hello&password=worl')
+      .set('Authorization', 'Bearer ' + tmpToken)
+      .expect(200)
+      .end(function(err, data) {
+        if (err) console.log(err);
+        assert.equal(data.text, supposedJson.sign.sign_in_failed);
+        done();
+      });
     });
   });
 
-  it('should login failed', function(done) {
-    supertest(app)
-    .get('/v1/signin?username=hello&password=worl')
-    .set('Authorization', 'Bearer ' + tmpToken)
-    .expect(200)
-    .end(function(err, data) {
-      if (err) console.log(err);
-      assert.equal(data.text, supposedJson.signin.login_failed);
-      done();
+  describe('signout', function() {
+    it('should sign out succeed', function(done) {
+      supertest(app)
+      .get('/v1/signout')
+      .set('Authorization', 'Bearer ' + tmpToken)
+      .expect(200)
+      .end(function(err, data) {
+        if (err) console.log(err);
+        assert.equal(data.text, supposedJson.sign.sign_out_succeed);
+        done();
+      });
     });
   });
 });
