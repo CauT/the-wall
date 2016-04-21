@@ -13,6 +13,34 @@ var oracle = require('../database/OracleWrapper');
 var redis = require('../database/RedisWrapper').redisClient;
 var utility = require('../routes/globalUtility');
 
+var tmpToken;
+
+describe('global utility', function() {
+  describe('token', function() {
+
+    describe('function createToken()', function() {
+      it('should create a token', function() {
+        tmpToken = utility.createToken('userForTest');
+        assert.equal(typeof(tmpToken), 'string');
+        console.log(tmpToken);
+      });
+    });
+
+    describe('function verifyToken()', function() {
+      it('should verify a token', function(done) {
+        assert(typeof(tmpToken), 'string');
+        utility.verifyToken(tmpToken)
+        .then(function(obj) {
+          assert(typeof(obj), 'object');
+          console.log(obj);
+          done();
+        });
+      });
+    });
+
+  });
+});
+
 describe('/v1', function() {
   describe('/device', function() {
     describe('/info', function() {
@@ -23,6 +51,7 @@ describe('/v1', function() {
           oracle.createPool(dbconfig).then(function() {
             supertest(app)
             .get('/v1/device/info/type_list')
+            .set('Authorization', 'Bearer ' + tmpToken)
             .expect(200)
             .end(function(err, data) {
               if (err) console.log(err);
@@ -39,6 +68,7 @@ describe('/v1', function() {
         it('should return json as expected', function(done) {
           supertest(app)
           .get('/v1/device/info/station_list')
+          .set('Authorization', 'Bearer ' + tmpToken)
           .expect(200)
           .end(function(err, data) {
             if (err) console.log(err);
@@ -57,6 +87,7 @@ describe('/data', function() {
     it('is queried with specified deviceType', function(done) {
       supertest(app)
       .get('/v1/data/agri_env/current?deviceType=Light')
+      .set('Authorization', 'Bearer ' + tmpToken)
       .expect(200)
       .end(function(err, data) {
         if (err) console.log(err);
@@ -68,6 +99,7 @@ describe('/data', function() {
     it('is queried with specified stationName', function(done) {
       supertest(app)
       .get('/v1/data/agri_env/current?stationName=A1')
+      .set('Authorization', 'Bearer ' + tmpToken)
       .expect(200)
       .end(function(err, data) {
         if (err) console.log(err);
@@ -79,6 +111,7 @@ describe('/data', function() {
     it('is queried with specified deviceType and stationName', function(done) {
       supertest(app)
       .get('/v1/data/agri_env/current?deviceType=Light&stationName=A1')
+      .set('Authorization', 'Bearer ' + tmpToken)
       .expect(200)
       .end(function(err, data) {
         if (err) console.log(err);
@@ -100,6 +133,7 @@ describe('/utils', function() {
       .then(function(toEqual) {
         supertest(app)
         .get('/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_ids=172&width=900&height=600')
+        .set('Authorization', 'Bearer ' + tmpToken)
         .expect(200)
         .end(function(err, data) {
           if (err) console.log(err);
@@ -119,6 +153,7 @@ describe('/utils', function() {
       .then(function(toEqual) {
         supertest(app)
         .get('/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_ids=172;174;176;178&width=900&height=600')
+        .set('Authorization', 'Bearer ' + tmpToken)
         .expect(200)
         .end(function(err, data) {
           if (err) console.log(err);
@@ -135,6 +170,7 @@ describe('/utils', function() {
       it('is queried with start_time undefined', function(done) {
         supertest(app)
         .get('/v1/utils/generate_graph?end_time=1443745800&devices_ids=172')
+        .set('Authorization', 'Bearer ' + tmpToken)
         .expect(500)
         .end(function(err, data) {
           if (err) console.log(err);
@@ -146,6 +182,7 @@ describe('/utils', function() {
       it('is queried with end_time undefined', function(done) {
         supertest(app)
         .get('/v1/utils/generate_graph?start_time=1443745800&devices_ids=172')
+        .set('Authorization', 'Bearer ' + tmpToken)
         .expect(500)
         .end(function(err, data) {
           if (err) console.log(err);
@@ -157,6 +194,7 @@ describe('/utils', function() {
       it('is queried with devices_ids undefined', function(done) {
         supertest(app)
         .get('/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000')
+        .set('Authorization', 'Bearer ' + tmpToken)
         .expect(500)
         .end(function(err, data) {
           if (err) console.log(err);
@@ -168,6 +206,7 @@ describe('/utils', function() {
       it('is queried with wrong device_id, so get null oracle result', function(done) {
         supertest(app)
         .get('/v1/utils/generate_graph?start_time=1443745800&end_time=1443760000&device_ids=172;171&width=900&height=600')
+        .set('Authorization', 'Bearer ' + tmpToken)
         .expect(500)
         .end(function(err, data) {
           if (err) console.log(err);
@@ -179,52 +218,28 @@ describe('/utils', function() {
   });
 });
 
-describe('global utility', function() {
-  describe('token', function() {
-    var tmpToken;
-    describe('function createToken()', function() {
-      it('should create a token', function() {
-        tmpToken = utility.createToken('userForTest');
-        assert.equal(typeof(tmpToken), 'string');
-      });
+describe('signin', function() {
+  it('should login succeed', function(done) {
+    supertest(app)
+    .get('/v1/signin?username=hello&password=world')
+    .set('Authorization', 'Bearer ' + tmpToken)
+    .expect(200)
+    .end(function(err, data) {
+      if (err) console.log(err);
+      assert.equal(data.text.slice(0, 45), supposedJson.signin.login_succeed.slice(0, 45));
+      done();
     });
-
-    describe('function verifyToken()', function() {
-      it('should verify a token', function(done) {
-        assert(typeof(tmpToken), 'string');
-        utility.verifyToken(tmpToken)
-        .then(function(obj) {
-          assert(typeof(obj), 'object');
-          console.log(obj);
-          done();
-        });
-      });
-    });
-
   });
 
-  describe('signin', function() {
-    it('should login succeed', function(done) {
-      supertest(app)
-      .get('/v1/signin?username=hello&password=world')
-      .expect(200)
-      .end(function(err, data) {
-        if (err) console.log(err);
-        assert.equal(data.text.slice(0, 45), supposedJson.signin.login_succeed.slice(0, 45));
-        done();
-      });
+  it('should login failed', function(done) {
+    supertest(app)
+    .get('/v1/signin?username=hello&password=worl')
+    .set('Authorization', 'Bearer ' + tmpToken)
+    .expect(200)
+    .end(function(err, data) {
+      if (err) console.log(err);
+      assert.equal(data.text, supposedJson.signin.login_failed);
+      done();
     });
-
-    it('should login failed', function(done) {
-      supertest(app)
-      .get('/v1/signin?username=hello&password=worl')
-      .expect(200)
-      .end(function(err, data) {
-        if (err) console.log(err);
-        assert.equal(data.text, supposedJson.signin.login_failed);
-        done();
-      });
-    });
-
   });
 });

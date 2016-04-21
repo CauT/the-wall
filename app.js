@@ -5,38 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var oracledb = require('oracledb');
+var jwt = require('express-jwt');
 
 var routes = require('./routes/index');
 var v1 = require('./routes/v1');
 var users = require('./routes/users');
+var config = require('./Config')
 
 var app = express();
 
-var dbRes;
-
-oracledb.getConnection(
-  {
-    user          : "desgemini",
-    password      : "z7575380",
-    connectString : "10.211.55.12/xe"
-  },
-  function(err, connection)
-  {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-    connection.execute(
-      "SELECT * FROM DEVICE",
-      function(err, result)
-      {
-        if (err) {
-          console.error(err.message);
-          return;
-        }
-        dbRes = result.rows;
-    });
-});
+app.use(jwt({secret: config.jwt_secret}).unless({path: ['/signin']}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

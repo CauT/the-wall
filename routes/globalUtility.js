@@ -10,7 +10,7 @@ Promise.promisifyAll(jwt);
 
 var redisTokenKeyPrefix = 'unexpired.token:';
 var redisPasswordKeyPrefix = 'users.password:';
-var tokenExpireTime = '1 ms';
+var tokenExpireTime = '2 days';
 var tokenExistedFlag = 1;
 
 function createSHA256(pwd) {
