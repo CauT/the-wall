@@ -14,7 +14,7 @@ var config = require('./Config')
 
 var app = express();
 
-app.use(jwt({secret: config.jwt_secret}).unless({path: ['/signin']}));
+// app.use(jwt({secret: config.jwt_secret}).unless({path: ['/signin']}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
