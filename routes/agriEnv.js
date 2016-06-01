@@ -41,7 +41,7 @@ function getHistoryValueOfSelectedDeviceSQL(deviceType, stationName, startTime,
       DEVICECODE,\
       DEVICENAME,\
       UNIT,\
-      ANALOGYVALUE,\
+      ANALOGYVALUE AS VALUE,\
       DEVICEHISTROY.RECTIME\
     FROM\
       DEVICE INNER JOIN DEVICEHISTROY\
