@@ -19,7 +19,7 @@ function renderGraph(req, res, filtereds) {
   });
 
   filtereds.forEach(function(filtered){
-    if (filtered[0] == undefined)
+    if (filtered[0] === undefined)
       // even if at least one of multi query was succeed
       // fast-fail is essential for secure
       throw new Error('数据库返回结果为空');
@@ -35,8 +35,8 @@ function renderGraph(req, res, filtereds) {
     titles: titles,
     dataX: x,
     dataY: ys,
-    height: req.query.height == undefined ? 200 : req.query.height,
-    width: req.query.width == undefined ? 300 : req.query.width,
+    height: req.query.height === undefined ? 200 : req.query.height,
+    width: req.query.width === undefined ? 300 : req.query.width,
   });
 }
 
@@ -48,7 +48,7 @@ function resFilter(resolve, reject, connection, resultSet, numRows, filtered) {
       if (err) {
         console.log(err.message);
         reject(err);
-      } else if (rows.length == 0) {
+      } else if (rows.length === 0) {
         resolve(filtered);
         process.nextTick(function() {
           oracle.releaseConnection(connection);
@@ -115,13 +115,13 @@ function createQuerySingleDeviceDataPromise(req, res, device_id, start_time, end
   });
 }
 
-function secureCheck(req, res) {
+function secureCheckBasic(req, res) {
   let qry = req.query;
 
   if (
-    qry.device_ids == undefined
-    || qry.start_time == undefined
-    || qry.end_time == undefined
+    qry.device_ids === undefined
+    || qry.start_time === undefined
+    || qry.end_time === undefined
   ) {
     throw new Error('device_ids或start_time或end_time参数为undefined');
   }
@@ -131,13 +131,95 @@ function secureCheck(req, res) {
   }
 };
 
+function secureCheckAdvance(req, res) {
+  let qry = req.query;
+
+  if (
+    qry.station_name === undefined
+    || qry.device_type === undefined
+    || qry.start_time === undefined
+    || qry.end_time === undefined
+  ) {
+    throw new Error('station_name或device_type或start_time或end_time参数为undefined');
+  }
+
+  if (req.query.end_time < req.query.start_time) {
+    throw new Error('终止时间小于起始时间');
+  }
+}
+
+// /v1/utils/generate_graph/advance?device_type=Light&station_name=B1&start_time=1443745800&end_time=1443760000&height=600&width=900
+router.get('/advance', function(req, res, next) {
+  try {
+    secureCheckAdvance(req, res);
+
+    var stationName = req.query.station_name + '%';
+    var deviceType = req.query.device_type;
+
+    oracle.simpleExecute(
+      'SELECT DEVICEID FROM DEVICE WHERE\
+      DEVICECODE LIKE :stationName\
+      AND DEVICENAME = :deviceType',
+      [
+        stationName,
+        deviceType
+      ],
+      {
+        outFormat: oracle.OBJECT
+      })
+    .then(function(results) {
+      var ids = [];
+      results.rows.forEach(function(obj) {
+        ids.push(obj.DEVICEID);
+      })
+      return ids;
+    })
+    .then(function(device_ids) {
+      try {
+        var queryPromises = [];
+
+        for(let i=0; i<device_ids.length; i++) {
+          queryPromises.push(createQuerySingleDeviceDataPromise(
+            req, res, device_ids[i], req.query.start_time, req.query.end_time));
+        };
+
+        Promise.all(queryPromises)
+        .then(function(filtereds) {
+          renderGraph(req, res, filtereds);
+        }).catch(function(err) {
+          res.status(500).json({
+            status: 'error',
+            message: err.message
+          });
+        })
+      } catch(err) {
+        res.status(500).json({
+          status: 'error',
+          message: err.message
+        });
+      }
+    })
+    .catch(function(err) {
+      res.status(500).json({
+        status: 'error',
+        message: err.message
+      });
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
+  }
+})
+
 // TODO: prevent SQL injection
-router.get('/', function(req, res, next) {
+router.get('/basic', function(req, res, next) {
   try {
     var device_ids;
     var queryPromises = [];
 
-    secureCheck(req, res);
+    secureCheckBasic(req, res);
 
     device_ids = req.query.device_ids.toString().split(';');
 
